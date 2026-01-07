@@ -5,6 +5,7 @@ from flask_jwt_extended import create_access_token
 
 api = Blueprint('api', __name__)
 
+
 @api.route('/Registro', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -23,6 +24,7 @@ def signup():
     db.session.commit()
 
     return jsonify({"msg": "Usuario ya creado"}), 201
+
 
 @api.route('Inicio', methods=['POST'])
 def login():
