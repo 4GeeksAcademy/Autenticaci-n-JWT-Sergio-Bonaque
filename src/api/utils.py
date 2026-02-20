@@ -1,22 +1,36 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
-from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
-from api.utils import generate_sitemap, APIException
-from flask_cors import CORS
+from flask import jsonify, url_for
 
-api = Blueprint('api', __name__)
+class APIException(Exception):
+    status_code = 400
 
-# Allow CORS requests to this API
-CORS(api)
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
 
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
+def has_no_empty_params(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
 
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
+def generate_sitemap(app):
+    links = ['/admin/']
+    for rule in app.url_map.iter_rules():
+        if "GET" in rule.methods and has_no_empty_params(rule):
+            url = url_for(rule.endpoint, **(rule.defaults or {}))
+            if "/admin/" not in url:
+                links.append(url)
 
-    return jsonify(response_body), 200
+    links_html = "".join(["<li><a href='" + y + "'>" + y + "</a></li>" for y in links])
+    return f"""
+        <div style="text-align: center;">
+        <img style="max-height: 80px" src='https://storage.googleapis.com' />
+        <h1>Rigo welcomes you to your API!!</h1>
+        <ul style="text-align: left;">{links_html}</ul></div>"""
