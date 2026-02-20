@@ -1,26 +1,17 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Layout } from "./pages/Layout"; // componente Layout
-import { Home } from "./pages/Home";
-import { Signup } from "./pages/Signup";
-import { Login } from "./pages/Login";
-import { Private } from "./pages/Private";
+import { Outlet } from "react-router-dom"; 
+import ScrollToTop from "../components/ScrollToTop";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 
-const AppRoutes = () => {
+export const Layout = () => {
     return (
-        <BrowserRouter>
-            <Routes>
-                {/*Layout*/}
-                <Route element={<Layout />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/private" element={<Private />} />
-                    <Route path="*" element={<h1>No encontrado</h1>} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
+        <ScrollToTop>
+            <Navbar />
+            <div className="container mt-5">
+                <Outlet />
+            </div>
+            <Footer />
+        </ScrollToTop>
     );
 };
-
-export default AppRoutes;
