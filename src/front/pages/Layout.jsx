@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Layout } from "./pages/layout"; // componente Layout
-import { Home } from "./pages/home";
+import { Layout } from "./pages/Layout"; // componente Layout
+import { Home } from "./pages/Home";
 import { Signup } from "./pages/Signup";
 import { Login } from "./pages/Login";
 import { Private } from "./pages/Private";
